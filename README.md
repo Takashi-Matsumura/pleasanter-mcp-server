@@ -45,6 +45,16 @@ Implem.Pleasanter統合のためのModel Context Protocol (MCP)サーバーで�
 - npm または yarn
 - Pleasanter サーバーへのアクセス権限とAPIキー
 
+### 動作確認済み環境
+
+以下の環境でビルドと動作確認が完了しています：
+
+- **OS**: Ubuntu 24.04.2 LTS (WSL2)
+- **Node.js**: v18.19.1
+- **npm**: v9.2.0
+- **TypeScript**: v5.8.3
+- **プラットフォーム**: WSL2 on Windows
+
 ## 設定
 
 1. **環境ファイルの作成**
