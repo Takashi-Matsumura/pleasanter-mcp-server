@@ -39,6 +39,12 @@ Implem.Pleasanter統合のためのModel Context Protocol (MCP)サーバーで�
    npm run build
    ```
 
+## 前提条件
+
+- Node.js 18.0.0 以上（推奨: 24.x LTS）
+- npm または yarn
+- Pleasanter サーバーへのアクセス権限とAPIキー
+
 ## 設定
 
 1. **環境ファイルの作成**
@@ -47,15 +53,20 @@ Implem.Pleasanter統合のためのModel Context Protocol (MCP)サーバーで�
    ```
 
 2. **設定の編集**
-   ```bash
+   ```env
    # 必須設定
-   PLEASANTER_BASE_URL=https://your-pleasanter-server.com
-   PLEASANTER_API_KEY=your-api-key-here
+   PLEASANTER_BASE_URL=http://10.255.20.80:50001  # ローカルネットワーク内のPleasanterサーバー
+   PLEASANTER_API_KEY=your-api-key-here          # PleasanterのAPIキー
    
    # オプション設定
    PLEASANTER_TIMEOUT=30000
    PLEASANTER_RETRIES=3
+   LOG_LEVEL=info
    ```
+   
+   **注意**: 
+   - 本番環境ではHTTPSを使用してください
+   - APIキーは安全に管理し、定期的にローテーションしてください
 
 3. **Pleasanter APIキーの取得**
    - Pleasanterシステムにログイン
@@ -65,9 +76,94 @@ Implem.Pleasanter統合のためのModel Context Protocol (MCP)サーバーで�
 
 ## Claude Desktopでの使用方法
 
+### macOS環境
+
 1. **Claude Desktop設定に追加**
    
    `~/Library/Application Support/Claude/claude_desktop_config.json` を編集:
+   
+   ```json
+   {
+     "mcpServers": {
+       "pleasanter": {
+         "command": "node",
+         "args": ["/path/to/pleasanter-mcp-server/dist/index.js"],
+         "env": {
+           "PLEASANTER_BASE_URL": "https://your-pleasanter-server.com",
+           "PLEASANTER_API_KEY": "your-api-key-here"
+         }
+       }
+     }
+   }
+   ```
+
+### Windows環境
+
+1. **Claude Desktop設定に追加**
+   
+   `%APPDATA%\Claude\claude_desktop_config.json` を編集:
+   
+   **オプション1: WSLコマンドを使用（推奨）**
+   ```json
+   {
+     "mcpServers": {
+       "pleasanter": {
+         "command": "wsl",
+         "args": [
+           "node",
+           "/home/ubuntu/github/Implem.Pleasanter/pleasanter-mcp-server/dist/index.js"
+         ],
+         "env": {
+           "PLEASANTER_BASE_URL": "http://10.255.20.80:50001",
+           "PLEASANTER_API_KEY": "your-api-key-here",
+           "PLEASANTER_TIMEOUT": "30000",
+           "PLEASANTER_RETRIES": "3",
+           "LOG_LEVEL": "info"
+         }
+       }
+     }
+   }
+   ```
+   
+   **オプション2: WSL2パスを直接指定**
+   ```json
+   {
+     "mcpServers": {
+       "pleasanter": {
+         "command": "node",
+         "args": [
+           "\\\\wsl.localhost\\Ubuntu\\home\\ubuntu\\github\\Implem.Pleasanter\\pleasanter-mcp-server\\dist\\index.js"
+         ],
+         "env": {
+           "PLEASANTER_BASE_URL": "http://10.255.20.80:50001",
+           "PLEASANTER_API_KEY": "your-api-key-here"
+         }
+       }
+     }
+   }
+   ```
+
+   **オプション3: Windows側にプロジェクトをコピーした場合**
+   ```json
+   {
+     "mcpServers": {
+       "pleasanter": {
+         "command": "node",
+         "args": ["C:\\path\\to\\pleasanter-mcp-server\\dist\\index.js"],
+         "env": {
+           "PLEASANTER_BASE_URL": "http://10.255.20.80:50001",
+           "PLEASANTER_API_KEY": "your-api-key-here"
+         }
+       }
+     }
+   }
+   ```
+
+### Linux環境
+
+1. **Claude Desktop設定に追加**
+   
+   `~/.config/Claude/claude_desktop_config.json` を編集:
    
    ```json
    {
@@ -201,6 +297,20 @@ npm run lint
 ### デバッグモード
 詳細なログを表示するには、環境変数で `LOG_LEVEL=debug` を設定してください。
 
+### Windows環境固有の問題
+
+1. **WSLコマンドが見つからない**
+   - Windows Subsystem for Linux (WSL)がインストールされているか確認
+   - `wsl --version` でWSLのバージョンを確認
+
+2. **パスの区切り文字の問題**
+   - Windowsのパスはバックスラッシュ `\` を使用
+   - JSON内ではエスケープが必要: `\\`
+
+3. **ファイアウォールの問題**
+   - Claude DesktopがMCPサーバーにアクセスできない場合
+   - Windows Defenderファイアウォールでポートを許可する必要がある場合があります
+
 ## セキュリティに関する考慮事項
 
 - APIキーは安全に保管してください
@@ -208,6 +318,36 @@ npm run lint
 - 適切なアクセス制御を実装してください
 - API使用量を監視してください
 - 定期的にキーをローテーションしてください
+
+## WSL2環境での開発
+
+Windows環境でWSL2を使用している場合の特別な設定：
+
+### 1. WSL2での環境構築
+```bash
+# WSL2 Ubuntu環境でのセットアップ
+sudo apt update
+sudo apt install nodejs npm
+
+# プロジェクトのセットアップ
+cd /home/ubuntu/github/Implem.Pleasanter/pleasanter-mcp-server
+npm install
+npm run build
+```
+
+### 2. 環境変数の設定
+```bash
+# WSL2環境でのPleasanter設定
+cp .env.example .env
+
+# .envファイルを編集
+PLEASANTER_BASE_URL=http://10.255.20.80:50001
+PLEASANTER_API_KEY=your-api-key-here
+```
+
+### 3. Windows側からのアクセス
+- WSL2のファイルシステムは `\\wsl.localhost\Ubuntu\` からアクセス可能
+- Claude DesktopはWindows側で実行するため、WSLコマンドまたはWSL2パスを使用
 
 ## Docker環境での実行
 

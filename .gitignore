@@ -13,6 +13,9 @@ build/
 .env.local
 .env.*.local
 
+# Claude Desktop configuration (contains sensitive information)
+claude_desktop_config.json
+
 # Logs
 logs/
 *.log
