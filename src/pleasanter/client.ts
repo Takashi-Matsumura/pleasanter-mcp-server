@@ -104,34 +104,34 @@ export class PleasanterClient {
   }
 
   async createIssue(siteId: number, issue: Partial<Issue>): Promise<ApiResponse<Issue>> {
-    const data = this.createRequest(issue);
+    const data = this.createRequest({ ...issue } as any);
     return this.makeRequest<Issue>(`/api/items/${siteId}/create`, data);
   }
 
   async updateIssue(siteId: number, issue: Partial<Issue>): Promise<ApiResponse<Issue>> {
-    const data = this.createRequest(issue);
+    const data = this.createRequest({ ...issue } as any);
     return this.makeRequest<Issue>(`/api/items/${siteId}/update`, data);
   }
 
   async upsertIssue(siteId: number, issue: Partial<Issue>): Promise<ApiResponse<Issue>> {
-    const data = this.createRequest(issue);
+    const data = this.createRequest({ ...issue } as any);
     return this.makeRequest<Issue>(`/api/items/${siteId}/upsert`, data);
   }
 
   async deleteIssue(siteId: number, issueId: number): Promise<ApiResponse<Issue>> {
-    const data = this.createRequest({ IssueId: issueId });
+    const data = this.createRequest({ IssueId: issueId } as any);
     return this.makeRequest<Issue>(`/api/items/${siteId}/delete`, data);
   }
 
   async bulkUpsertIssues(siteId: number, issues: Partial<Issue>[]): Promise<ApiResponse<Issue>> {
-    const data: BulkOperationRequest = this.createRequest({ Data: issues });
+    const data = this.createRequest({ Data: issues } as any) as BulkOperationRequest;
     return this.makeRequest<Issue>(`/api/items/${siteId}/bulkupsert`, data);
   }
 
   async bulkDeleteIssues(siteId: number, issueIds: number[]): Promise<ApiResponse<Issue>> {
-    const data: BulkOperationRequest = this.createRequest({ 
+    const data = this.createRequest({ 
       Data: issueIds.map(id => ({ IssueId: id }))
-    });
+    } as any) as BulkOperationRequest;
     return this.makeRequest<Issue>(`/api/items/${siteId}/bulkdelete`, data);
   }
 
@@ -142,17 +142,17 @@ export class PleasanterClient {
   }
 
   async createResult(siteId: number, result: Partial<Result>): Promise<ApiResponse<Result>> {
-    const data = this.createRequest(result);
+    const data = this.createRequest({ ...result } as any);
     return this.makeRequest<Result>(`/api/items/${siteId}/create`, data);
   }
 
   async updateResult(siteId: number, result: Partial<Result>): Promise<ApiResponse<Result>> {
-    const data = this.createRequest(result);
+    const data = this.createRequest({ ...result } as any);
     return this.makeRequest<Result>(`/api/items/${siteId}/update`, data);
   }
 
   async deleteResult(siteId: number, resultId: number): Promise<ApiResponse<Result>> {
-    const data = this.createRequest({ ResultId: resultId });
+    const data = this.createRequest({ ResultId: resultId } as any);
     return this.makeRequest<Result>(`/api/items/${siteId}/delete`, data);
   }
 
@@ -163,12 +163,12 @@ export class PleasanterClient {
   }
 
   async createSite(site: Partial<Site>): Promise<ApiResponse<Site>> {
-    const data = this.createRequest(site);
+    const data = this.createRequest({ ...site } as any);
     return this.makeRequest<Site>('/api/items/0/createsite', data);
   }
 
   async updateSite(siteId: number, site: Partial<Site>): Promise<ApiResponse<Site>> {
-    const data = this.createRequest(site);
+    const data = this.createRequest({ ...site } as any);
     return this.makeRequest<Site>(`/api/items/${siteId}/updatesite`, data);
   }
 
@@ -192,12 +192,12 @@ export class PleasanterClient {
 
   // Import/Export operations
   async importData(siteId: number, importRequest: Omit<ImportRequest, keyof ApiRequest>): Promise<ApiResponse<any>> {
-    const data = this.createRequest(importRequest);
+    const data = this.createRequest({ ...importRequest } as any);
     return this.makeRequest(`/api/items/${siteId}/import`, data);
   }
 
   async exportData(siteId: number, exportRequest: Omit<ExportRequest, keyof ApiRequest>): Promise<string> {
-    const data = this.createRequest(exportRequest);
+    const data = this.createRequest({ ...exportRequest } as any);
     const response = await this.client.post(`/api/items/${siteId}/export`, data, {
       responseType: 'text',
     });

@@ -197,7 +197,7 @@ ${includeTrends ? `
     const period = args.period || 'month';
     const focusArea = args.focusArea || 'performance';
 
-    const focusDescriptions = {
+    const focusDescriptions: Record<string, string> = {
       performance: '生産性とパフォーマンス',
       quality: '品質と再発防止',
       timeline: 'スケジュールと期限管理',
@@ -278,7 +278,7 @@ ${focusArea === 'timeline' ? `
     const teamType = args.teamType || 'assignee';
     const period = args.period || 'month';
 
-    const teamTypeDescriptions = {
+    const teamTypeDescriptions: Record<string, string> = {
       assignee: '担当者',
       manager: '管理者',
       group: 'グループ',
@@ -292,7 +292,7 @@ ${focusArea === 'timeline' ? `
 \`\`\`
 1. pleasanter_status_summary
    - groupBy: "${teamType}"
-   - ${teamTypeDescriptions[teamType]}別の課題分布を取得
+   - ${teamTypeDescriptions[teamType] || '担当者'}別の課題分布を取得
 
 ${teamType === 'assignee' ? `
 2. pleasanter://users リソースを参照
@@ -315,7 +315,7 @@ pleasanter_trend_analysis を使用：
 
 ## 3. 詳細分析
 \`\`\`
-各${teamTypeDescriptions[teamType]}について以下を分析：
+各${teamTypeDescriptions[teamType] || '担当者'}について以下を分析：
 
 pleasanter_advanced_search で以下のメトリクスを計算：
 - 完了課題数（${period}間）
@@ -327,7 +327,7 @@ pleasanter_advanced_search で以下のメトリクスを計算：
 
 ## 4. レポート構成
 
-### ${teamTypeDescriptions[teamType]}別パフォーマンス
+### ${teamTypeDescriptions[teamType] || '担当者'}別パフォーマンス
 - 課題完了数ランキング
 - 生産性指標（課題/時間、品質スコア等）
 - 強みと改善点の特定
@@ -338,7 +338,7 @@ pleasanter_advanced_search で以下のメトリクスを計算：
 - ワークロードバランス
 
 ### ベストプラクティス
-- 高パフォーマンス${teamTypeDescriptions[teamType]}の共通点
+- 高パフォーマンス${teamTypeDescriptions[teamType] || '担当者'}の共通点
 - 効率的な作業パターン
 - 成功事例の特定
 
@@ -360,7 +360,7 @@ pleasanter_advanced_search で以下のメトリクスを計算：
     const siteId = args.siteId;
     const urgencyLevel = args.urgencyLevel || 'medium';
 
-    const urgencyLevelDescriptions = {
+    const urgencyLevelDescriptions: Record<string, string> = {
       high: '緊急度高（即日対応必要）',
       medium: '緊急度中（3日以内対応）',
       low: '緊急度低（1週間以内対応）',
@@ -368,7 +368,7 @@ pleasanter_advanced_search で以下のメトリクスを計算：
 
     return `# 優先対応課題の特定とアクションプラン
 
-サイトID ${siteId} について、${urgencyLevelDescriptions[urgencyLevel]}のタスクを特定し、アクションプランを提案してください。
+サイトID ${siteId} について、${urgencyLevelDescriptions[urgencyLevel] || '緊急度中（3日以内対応）'}のタスクを特定し、アクションプランを提案してください。
 
 ## 1. 緊急課題の特定
 \`\`\`

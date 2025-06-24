@@ -49,19 +49,10 @@ class PleasanterMCPServer {
     this.promptTemplates = new PromptTemplates();
 
     // Initialize MCP server
-    this.server = new Server(
-      {
-        name: 'pleasanter-mcp-server',
-        version: '1.0.0',
-      },
-      {
-        capabilities: {
-          tools: {},
-          resources: {},
-          prompts: {},
-        },
-      }
-    );
+    this.server = new Server({
+      name: 'pleasanter-mcp-server',
+      version: '1.0.0',
+    });
 
     this.setupHandlers();
   }
