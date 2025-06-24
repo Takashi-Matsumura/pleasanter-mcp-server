@@ -50,8 +50,8 @@ Implem.Pleasanter統合のためのModel Context Protocol (MCP)サーバーで�
 以下の環境でビルドと動作確認が完了しています：
 
 - **OS**: Ubuntu 24.04.2 LTS (WSL2)
-- **Node.js**: v18.19.1
-- **npm**: v9.2.0
+- **Node.js**: v24.2.0
+- **npm**: v11.3.0
 - **TypeScript**: v5.8.3
 - **プラットフォーム**: WSL2 on Windows
 
